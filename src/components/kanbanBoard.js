@@ -69,13 +69,8 @@ const KanbanBoard = () => {
         <button
           type="submit"
           onClick={() => {
-            // Trim whitespace
             const trimmedTask = newTask.trim();
-
-            // Check if empty
             if (!trimmedTask) return;
-
-            // Check if task already exists
             const exists = tasks.some(
               (task) => task.name.toLowerCase() === trimmedTask.toLowerCase()
             );
@@ -84,8 +79,6 @@ const KanbanBoard = () => {
               alert("Task already exists!");
               return;
             }
-
-            // Add new task to "To Do"
             setTasks([...tasks, { name: trimmedTask, id: 0 }]);
             setNewTask("");
           }}
@@ -106,10 +99,11 @@ const KanbanBoard = () => {
         className="taskBoard"
         style={{
           display: "flex",
-          gap: "20px",
+          flexWrap: "wrap",
+          gap: "10px",
           alignItems: "flex-start",
           justifyContent: "center",
-          padding: "20px",
+          padding: "10px",
           background: "#f4f5f7",
           minHeight: "auto",
         }}
@@ -117,20 +111,29 @@ const KanbanBoard = () => {
         {taskCategories.map((ele, i) => {
           return (
             <div
+              key={i}
               className="taskCard"
               style={{
-                flex: "1",
-                minWidth: "250px",
+                flex: "1 1 300px",
+                maxWidth: "250px",
                 background: "#ebecf0",
                 borderRadius: "8px",
                 padding: "10px",
                 minHeight: "400px",
                 boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+                margin: "5px"
               }}
             >
-              <h3 style={{ textAlign: "center", marginBottom: "10px" }}>
+              <h3
+                style={{
+                  textAlign: "center",
+                  marginBottom: "10px",
+                  fontSize: "1.1rem",
+                }}
+              >
                 {ele}
               </h3>
+
               {tasks.map((e) => {
                 return e.id === i ? (
                   <div
