@@ -16,18 +16,22 @@ const KanbanBoard = () => {
     { name: "task4", id: 3 },
   ]);
 
-  const moveBackward = (index) => {
+  const moveBackward = (e) => {
     setTasks((prev) => {
       return prev.map((ele) => {
-        return ele.id === index ? { name: ele.name, id: ele.id - 1 } : ele;
+        return ele.id === e.id && ele.name === e.name
+          ? { name: ele.name, id: ele.id - 1 }
+          : ele;
       });
     });
   };
 
-  const moveForword = (index) => {
+  const moveForword = (e) => {
     setTasks((prev) => {
       return prev.map((ele) => {
-        return ele.id === index ? { name: ele.name, id: ele.id + 1 } : ele;
+        return ele.id === e.id && e.name === ele.name
+          ? { name: ele.name, id: ele.id + 1 }
+          : ele;
       });
     });
   };
@@ -65,7 +69,24 @@ const KanbanBoard = () => {
         <button
           type="submit"
           onClick={() => {
-            setTasks([...tasks, { name: newTask, id: 0 }]);
+            // Trim whitespace
+            const trimmedTask = newTask.trim();
+
+            // Check if empty
+            if (!trimmedTask) return;
+
+            // Check if task already exists
+            const exists = tasks.some(
+              (task) => task.name.toLowerCase() === trimmedTask.toLowerCase()
+            );
+
+            if (exists) {
+              alert("Task already exists!");
+              return;
+            }
+
+            // Add new task to "To Do"
+            setTasks([...tasks, { name: trimmedTask, id: 0 }]);
             setNewTask("");
           }}
           style={{
@@ -137,7 +158,7 @@ const KanbanBoard = () => {
                       <button
                         className="backButton"
                         disabled={e.id === 0}
-                        onClick={() => moveBackward(e.id)}
+                        onClick={() => moveBackward(e)}
                         style={{
                           background: "#e0e0e0",
                           border: "none",
@@ -151,7 +172,7 @@ const KanbanBoard = () => {
                       <button
                         className="forwardButton"
                         disabled={e.id === 3}
-                        onClick={() => moveForword(e.id)}
+                        onClick={() => moveForword(e)}
                         style={{
                           background: "#4caf50",
                           color: "white",
@@ -168,7 +189,7 @@ const KanbanBoard = () => {
                         disabled={e.id === 3}
                         onClick={() =>
                           setTasks((prev) =>
-                            prev.filter((task) => task.id !== e.id)
+                            prev.filter((task) => task.name !== e.name)
                           )
                         }
                         style={{
